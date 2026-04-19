@@ -10,7 +10,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git 'https://github.com/VarshithaJ07/docker.git'
+                git branch: 'main', url: 'https://github.com/VarshithaJ07/docker.git'
             }
         }
 
@@ -22,8 +22,11 @@ pipeline {
 
         stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
-                usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
                     sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
                 }
             }
@@ -35,7 +38,7 @@ pipeline {
             }
         }
     }
-}
+
     post {
         success {
             echo 'Image successfully built and pushed to Docker Hub'
