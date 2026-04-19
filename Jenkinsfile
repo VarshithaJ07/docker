@@ -3,21 +3,14 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "varshithaj21/app-image"
+        TAG = "v1"
     }
 
     stages {
 
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/VarshithaJ07/docker.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:latest")
-                }
+                bat 'docker build -t %DOCKER_IMAGE%:%TAG% .'
             }
         }
 
@@ -25,21 +18,17 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
                 )]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                    bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Image') {
             steps {
-                script {
-                    docker.withRegistry('', 'dockerhub-creds') {
-                        docker.image("${DOCKER_IMAGE}:latest").push()
-                    }
-                }
+                bat 'docker push %DOCKER_IMAGE%:%TAG%'
             }
         }
     }
