@@ -16,7 +16,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:$TAG .'
+                bat 'docker build -t %DOCKER_IMAGE%:%TAG% .'
             }
         }
 
@@ -27,14 +27,14 @@ pipeline {
                     usernameVariable: 'USERNAME',
                     passwordVariable: 'PASSWORD'
                 )]) {
-                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                    bat 'echo %PASSWORD% | docker login -u %USERNAME% --password-stdin'
                 }
             }
         }
 
         stage('Push Image') {
             steps {
-                sh 'docker push $DOCKER_IMAGE:$TAG'
+                bat 'docker push %DOCKER_IMAGE%:%TAG%'
             }
         }
     }
