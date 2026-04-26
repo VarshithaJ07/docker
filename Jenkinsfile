@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "varshithaj/app-image"
+        DOCKER_IMAGE = "varshithaj21/app-image"
         TAG = "v1"
     }
 
@@ -10,7 +10,7 @@ pipeline {
         stage('Clone Code') {
             steps {
                 // Fixed: Removed the double 'git' keyword
-                git branch: 'main', url: 'https://github.com/VarshithaJ13/docker-jenkins.git'
+                git branch: 'main', url: 'https://github.com/VarshithaJ07/docker.git'
             }
         }
 
